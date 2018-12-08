@@ -1,0 +1,14 @@
+{
+	"$schema": "http://json-schema.org/draft-04/schema#",
+	"type": "object",
+	"properties": {
+		"enable": {"type": "boolean", "default": false},
+		"sharedKey": {"type": "string", "default": "SHARED_KEY"},
+		"hooks": {
+			"type": "array",
+			"uniqueItems": true,
+			"items": {"type": "string"},
+			"minItems": 1
+		}
+	}
+}
