@@ -25,7 +25,7 @@ function register_api() {
         var result = []
         nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').teams.forEach(function(team, i) {
             result[i] = {
-                name: team.name,
+                id: team.id,
                 status: "waiting"
             };
         });
@@ -42,7 +42,7 @@ function register_api() {
         nodecg.readReplicant("finishedTimers", 'nodecg-speedcontrol').forEach(function(timer, i) {
             if (timer.time != '00:00:00') {
                 result.forEach(function(runner) {
-                    if (runner.name == timer.name) {
+                    if (runner.id == timer.id) {
                         runner.status = "finished";
                     }
                 });
@@ -115,12 +115,17 @@ function getRunData() {
 	if (runCustomData && runCustomData.info && runCustomData.info.toLowerCase() === 'sponsored')
 		sponsored = true;
 
+	var players = [];
+	nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').teams.forEach(team => {
+		team.players.forEach(player => players.push(player));
+	});
+
     return {
         game: nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').game,
         category: nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').category,
         console: nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').console,
         teams: nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').teams,
-		players: nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').players,
+		players: players,
 		sponsored: sponsored,
         time: nodecg.readReplicant("stopwatch", 'nodecg-speedcontrol').time,
         start: nodecg.readReplicant("activeRunStartTime", 'nodecg-speedcontrol'),
