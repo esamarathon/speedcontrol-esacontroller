@@ -30,9 +30,9 @@ function register_api() {
             };
         });
 
-        const stopwatch = nodecg.readReplicant('stopwatch', 'nodecg-speedcontrol')
-        //nodecg.log.info(stopwatch);
-        if (stopwatch.state == "running") {
+        const timer = nodecg.readReplicant('timer', 'nodecg-speedcontrol')
+        //nodecg.log.info(timer);
+        if (timer.state == "running") {
             result.forEach(function(runner) {
                 runner.status = "running";
             });
@@ -86,12 +86,13 @@ function register_api() {
 	});
 	
 	// Store the currently set run when the timer first starts, which we will use for the upload info.
-	var stopwatch = nodecg.Replicant('stopwatch', "nodecg-speedcontrol");
-	stopwatch.on('change', (newVal, oldVal) => {
+	var timer = nodecg.Replicant('timer', "nodecg-speedcontrol");
+	timer.on('change', (newVal, oldVal) => {
 		if (!lastrundata.value && oldVal && oldVal.state === 'stopped' && newVal.state === 'running')
 			lastrundata.value = clone(getRunData());
 	});
 
+	// The runEnded event no longer exists so this is here for reference
     /*nodecg.listenFor("runEnded", "nodecg-speedcontrol", function(message) {
         nodecg.log.info(nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol'))
         var data = getRunData()
@@ -127,8 +128,8 @@ function getRunData() {
         teams: nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').teams,
 		players: players,
 		sponsored: sponsored,
-        time: nodecg.readReplicant("stopwatch", 'nodecg-speedcontrol').time,
-        start: nodecg.readReplicant("activeRunStartTime", 'nodecg-speedcontrol'),
+        time: nodecg.readReplicant("timer", 'nodecg-speedcontrol').time,
+        start: nodecg.readReplicant("activeRunStartTime"),
         end: getTimeStamp()
     }
 }

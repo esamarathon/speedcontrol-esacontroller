@@ -5,7 +5,7 @@ Expansion bundle that works alongside [nodecg-speedcontrol](https://github.com/s
 ### Config
 
 ```
-"api": {
+{
 	"enable": true,
 	"sharedKey": "TWITCH_ID",
 	"hooks": ["HOOK_URL"]
