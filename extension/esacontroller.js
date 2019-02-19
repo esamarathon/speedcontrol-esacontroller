@@ -23,12 +23,15 @@ function register_api() {
 
     speedcontrolRouter.get("/timers", function(req, res) {
         var result = []
-        nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').teams.forEach(function(team, i) {
-            result[i] = {
-                id: team.id,
-                status: "waiting"
-            };
-        });
+		
+		if (nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol')) {
+			nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').teams.forEach(function(team, i) {
+				result[i] = {
+					id: team.id,
+					status: "waiting"
+				};
+			});
+		}
 
         const timer = nodecg.readReplicant('timer', 'nodecg-speedcontrol')
         //nodecg.log.info(timer);
@@ -110,12 +113,14 @@ function register_api() {
 }
 
 function getRunData() {
+	if (!nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol')) return;
+	
 	// Some bad code to get the sponsored data if it exists.
 	var runCustomData = nodecg.readReplicant("runDataActiveRun", "nodecg-speedcontrol").customData;
 	var sponsored = false;
 	if (runCustomData && runCustomData.info && runCustomData.info.toLowerCase() === 'sponsored')
 		sponsored = true;
-
+	
 	var players = [];
 	nodecg.readReplicant("runDataActiveRun", 'nodecg-speedcontrol').teams.forEach(team => {
 		team.players.forEach(player => players.push(player));
